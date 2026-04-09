@@ -32,7 +32,7 @@ export let logoutBtn;
 // ======= Driver info setup =======
 addDriver("a","Guy 1","123 456 8790",20);
 addDriver("b","Guy 2","123 456 8790",30);
-let currentDriver;
+
 
 function addDriver(username,name, number,pay_percentage){
   driverInfo.push({username,name,number,pay_percentage});
