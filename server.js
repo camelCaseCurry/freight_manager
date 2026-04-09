@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 
 import fs from "fs";
 import cors from "cors";
-import { DocumentProcessorServiceClient } from "@google-cloud/documentai";
+//import { DocumentProcessorServiceClient } from "@google-cloud/documentai";
 
 import { scanOrganizer } from "./src/helpers.js"; 
 
