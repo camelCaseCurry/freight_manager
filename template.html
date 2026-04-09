@@ -1,0 +1,189 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Driver Dispatch Sheet</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: Arial, Helvetica, sans-serif; background:#f5f5f5; padding:20px; }
+    .dispatch { max-width:800px; margin:auto; background:#fff; padding:20px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+    .date-banner { background:#000; color:#fff; padding:10px; border-radius:6px; text-align:center; font-weight:bold; margin-bottom:15px; }
+    h1 { font-size:20px; }
+    h2 { font-size:16px; margin-top:20px; border-bottom:1px solid #ddd; padding-bottom:5px; }
+    p { font-size:14px; margin:6px 0; }
+    .nav-btn { display:inline-block; margin-top:6px; padding:10px 14px; background:#0a5cff; color:#fff; border-radius:6px; text-decoration:none; font-weight:bold; font-size:14px; }
+    .nav-btn:hover { background:#0847c9; }
+    .pay-box { background:#f0f7ff; border:1px solid #cfe2ff; padding:10px; border-radius:6px; margin-top:10px; font-weight:bold; }
+    .note-box { background:#fff7e6; border:1px solid #ffd59e; padding:10px; border-radius:6px; margin-top:10px; font-size:13px; }
+    .rate-box { background:#f6fff2; border:1px solid #cfe9c7; padding:10px; border-radius:6px; margin-top:10px; font-size:13px; }
+    .footer { margin-top:20px; text-align:center; font-weight:bold; font-size:13px; }
+    .small { font-size:12px; color:#333; }
+  </style>
+</head>
+<body>
+
+
+
+<div class="dispatch">
+<h2>Welcome Admin, <span id="usernameDisplay"></span></h2>
+
+<div><h3>Scan New File</h3>
+<input id="pdfInput" type="file">
+<br>
+<input id="scanBtn" type="button" value="Scan"> <p id="scanLoadingText" display="none">  </p>
+</div>
+
+<div><h3>Previous Scans</h3>
+  <select id="scanDropdown">
+    <option value="">-- Select a scan --</option>
+  </select>
+</div>
+
+<div id="scanDetails" style="display: none;">
+  <h4>PDF Link:</h4>
+  <a id="pdfLink" href="#" target="_blank">Open PDF</a>
+
+  <h4>Entities:</h4>
+  <pre id="entitiesDisplay"></pre>
+</div>
+
+<canvas id="canvas" style="display:none;"></canvas>
+
+<label> Driver Pay Percentage</label>
+<input id="driver_percentage_button">
+
+<div><br><input type="button" id = "logout" value="Log Out"><br></div>
+<br>
+
+ 
+ 
+  <div class="date-banner">
+    Dispatch Date: <span id="dispatchDate"></span>
+  </div>
+
+  <h1>STANDARD Driver Dispatch Sheet</h1>
+
+  <p><strong>Driver:</strong> <span id="driver_name"></span>| <span id="driver_phone"></span></p>
+  <p><strong>Load Contact (<span id="load_company"></span>):</strong> <span id="load_name"></span> | <span id="load_phone"></span> | <span id="load_email"></span></p>
+
+  <p><strong>Shipment ID:</strong> <span id="shipment_id"></span></p>
+  <p><strong>Pickup #:</strong> <span id="pickup_number"></span></p>
+
+  <p><strong>Carrier:</strong> D &amp; A LOGISTICS INC/RICHWAY TRANSPORT INC. | (301) 535-0809</p>
+  <p><strong>Truck ID:</strong> <span id="truck_id"></span> | &nbsp; <strong>Trailer ID:</strong> <span id="trailer_id"></span></p>
+
+  <p><strong>Rate (Total):</strong> $<span id="total_payment"></span></p>
+
+<div class="note-box">
+    <strong>CHECK-IN  INSTRUCTIONS:</strong>
+ <p class="STRONG">• <span id="checkin_instructions"></span>
+</p>
+  </div>
+<div class="note-box">
+    <strong>IMPORTANT REQUIREMENTS:</strong>
+    <div id="instructions_box">
+    </div>
+  
+  </div>
+  
+<h2>Equipment / Temp</h2>
+  <p><strong>Equipment:</strong> <span id="truck_size"></span>' <span id="truck_equpment_or_type"></span></p>
+  <p><strong>Temperature:</strong> <span id="temperature"></span>°F (Run Continuous)</p>
+  <p><strong>Weight:</strong> Up to <span id="total_weight"></span> lbs</p>
+
+<div id="pickup_box"></div>
+<div id="fuel_stop_box"></div>
+<div id="delivery_box"></div>
+
+
+
+<div class="pay-box">
+    Driver Pay (<span id="driver_pay_percent"></span>%): $ <span id="driver_pay"></span>
+  </div>
+
+  <div class="rate-box">
+    <strong>Rate Breakdown:</strong>
+    <p class="small">Freight (Flat): $<span id="flat_rate"></span></p>
+    <p class="small">
+    <p><strong>Total:</strong> $<span id="total_payment"></span></p>
+  </div>
+
+
+  <div class="footer">
+    Spannaa LDA Production
+  </div>
+</div>
+
+
+<script type="module" src="src/action.js"></script>
+</body>
+</html>
+
+
+html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Driver Dispatch Sheet</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+    .dispatch {
+      max-width: 800px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .date-banner {
+      background: #000;
+      color: #fff;
+      padding: 10px;
+      border-radius: 6px;
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+    h1 { font-size: 20px; }
+    h2 {
+      font-size: 16px;
+      margin-top: 20px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 5px;
+    }
+    p { font-size: 14px; margin: 6px 0; }
+    .nav-btn {
+      display: inline-block;
+      margin-top: 6px;
+      padding: 10px 14px;
+      background: #0a5cff;
+      color: #fff;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .nav-btn:hover { background: #0847c9; }
+    .pay-box {
+      background: #f0f7ff;
+      border: 1px solid #cfe2ff;
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    .footer {
+      margin-top: 20px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+

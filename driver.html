@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Driver Dispatch Sheet</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css" />
+  <style>
+
+  </style>
+</head>
+
+<body>
+
+
+
+  <div class="dispatch">
+ 
+    <div id="driver-view" >
+      <h2>Welcome Driver, <span id="usernameDisplay"></span></h2>
+      <div class="date-banner">
+        Dispatch Date: <span id="dispatchDate"></span>
+      </div>
+
+      <h1> Driver Dispatch Sheet</h1>
+
+      <p><strong>Driver:</strong> <span id="driver_name"></span>| <span id="driver_phone"></span></p>
+      <p><strong>Load Contact (<span id="load_company"></span>):</strong> <span id="load_name"></span> | <span
+          id="load_phone"></span> | <span id="load_email"></span></p>
+
+      <p><strong>Shipment ID:</strong> <span id="shipment_id"></span></p>
+      <p><strong>Pickup #:</strong> <span id="pickup_number"></span></p>
+
+      <p><strong>Carrier:</strong> D &amp; A LOGISTICS INC/RICHWAY TRANSPORT INC. | (301) 535-0809</p>
+      <p><strong>Truck ID:</strong> <span id="truck_id"></span> | &nbsp; <strong>Trailer ID:</strong> <span
+          id="trailer_id"></span></p>
+
+      <p><strong>Rate (Total):</strong> $<span id="total_payment"></span></p>
+
+      <div class="note-box">
+        <strong>CHECK-IN INSTRUCTIONS:</strong>
+        <p class="STRONG">• <span id="checkin_instructions"></span>
+        </p>
+      </div>
+      <div class="note-box">
+        <strong>IMPORTANT REQUIREMENTS:</strong>
+        <div id="instructions_box">
+        </div>
+
+      </div>
+
+      <h2>Equipment / Temp</h2>
+      <p><strong>Equipment:</strong> <span id="truck_size"></span>' <span id="truck_equpment_or_type"></span></p>
+      <p><strong>Temperature:</strong> <span id="temperature"></span>°F (Run Continuous)</p>
+      <p><strong>Weight:</strong> Up to <span id="total_weight"></span> lbs</p>
+
+      <div id="pickup_box"></div>
+      <div id="fuel_stop_box"></div>
+      <div id="delivery_box"></div>
+
+
+
+      <div class="pay-box">
+        Driver Pay (<span id="driver_pay_percent"></span>%): $ <span id="driver_pay"></span>
+      </div>
+
+      <div class="rate-box">
+        <strong>Rate Breakdown:</strong>
+        <p class="small">Freight (Flat): $<span id="flat_rate"></span></p>
+        <p class="small">
+        <p><strong>Total:</strong> $<span id="total_payment"></span></p>
+      </div>
+
+
+
+      <div class="footer">
+        Spannaa LDA Production
+      </div>
+    </div>
+
+    <div><br><input type="button" id="logout" value="Log Out"><br></div>
+
+    <script type="module" src="src/driver.js"></script>
+</body>
+
+</html>
