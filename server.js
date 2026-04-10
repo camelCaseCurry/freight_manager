@@ -3,10 +3,10 @@ import multer from "multer";
 import path from "path";
 import { fileURLToPath } from 'url';
 
+import {parseLighthouse} from "./src/parsers.js"
 import pdf from "pdf-parse";
 import fs from "fs";
 import cors from "cors";
-//import { DocumentProcessorServiceClient } from "@google-cloud/documentai";
 
 import { scanOrganizer } from "./src/helpers.js"; 
 
@@ -38,16 +38,7 @@ const upload = multer({ storage });
 const scansDir = path.join(__dirname, "scans");
 if (!fs.existsSync(scansDir)) fs.mkdirSync(scansDir);
 
-/* 
-// Document AI client
-const client = new DocumentProcessorServiceClient({
-  keyFilename: "driver-app-481520-46f4e28d5e0e.json",
-});
 
-// Processor version
-const processorVersion =
-  "projects/863291234374/locations/us/processors/1b3f1c50c9e016a5/processorVersions/pretrained-foundation-model-v1.5-pro-2025-06-20";
-*/
 // Helper functions
 function getUserScansFile(userId) {
   return path.join(scansDir, `${userId}.json`);
@@ -63,50 +54,50 @@ function saveUserScans(userId, scans) {
   fs.writeFileSync(getUserScansFile(userId), JSON.stringify(scans, null, 2));
 }
 
-// // OCR endpoint
-// app.post("/ocr", upload.single("file"), async (req, res) => {
-//   const { userId } = req.body; // user must send their ID
-//   if (!userId) return res.status(400).send("No userId provided");
-//   if (!req.file) return res.status(400).send("No file uploaded");
+ app.post("/ocr", upload.single("file"), async (req, res) => {
+  try {
+    const { userId } = req.body;
+    if (!userId) return res.status(400).send("No userId provided");
+    if (!req.file) return res.status(400).send("No file uploaded");
 
-//   const pdfUrl = `/uploads/${req.file.filename}`;
+    const pdfUrl = `/uploads/${req.file.filename}`;
 
-//   try {
-//     const fileBuffer = fs.readFileSync(req.file.path);
+    // ✅ Read file
+    const fileBuffer = fs.readFileSync(req.file.path);
 
-//     const request = {
-//       name: processorVersion,
-//       rawDocument: {
-//         content: fileBuffer.toString("base64"),
-//         mimeType: req.file.mimetype,
-//       },
-//     };
+    // ✅ Parse PDF → text
+    const data = await pdf(fileBuffer);
+    const text = data.text;
 
-//     const [result] = await client.processDocument(request);
+    console.log("Extracted text:", text);
 
-//     // Store the scan in the user-specific JSON
-//     const userScans = loadUserScans(userId);
-//     const newScan = {
-//       id: Date.now().toString(),
-//       pdf: pdfUrl,
-//       text: result.document.text,
-//       entities: result.document.entities,
-//       formatted: scanOrganizer(result.document.entities),
-//       createdAt: new Date().toISOString(),
-//     };
-//     userScans.push(newScan);
-//     saveUserScans(userId, userScans);
+    // ✅ Your parsing logic
+    const extracted = parseLighthouse(text);
 
-//     // Remove the uploaded file from uploads (optional)
-//     // fs.unlinkSync(req.file.path);
+    // ✅ Store the scan
+    const userScans = loadUserScans(userId);
 
-//     res.json(newScan);
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).send("Document AI processing failed");
-//   }
-// });
+    const newScan = {
+      id: Date.now().toString(),
+      pdf: pdfUrl,
+      text: text,              // ✅ FIXED
+      extracted: extracted,    // ✅ ADD THIS
+      createdAt: new Date().toISOString(),
+    };
 
+    userScans.push(newScan);
+    saveUserScans(userId, userScans);
+
+    // ✅ Optional cleanup
+    fs.unlinkSync(req.file.path);
+
+    res.json(newScan);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("PDF processing failed");
+  }
+});
 // Get all scans for a user
 app.get("/scans", (req, res) => {
   const { userId } = req.query;
