@@ -4,7 +4,7 @@ import path from "path";
 import { fileURLToPath } from 'url';
 
 import {parseLighthouse} from "./src/parsers.js"
-import 'pdf-parse/worker';
+
 import pdf from "pdf-parse";
 import fs from "fs";
 import cors from "cors";
