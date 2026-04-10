@@ -44,7 +44,7 @@ function addDriver(username,name, number,pay_percentage){
 
 function populateDriverInfo(driver){
   const d = driverInfo.find(e => e.username === driver);
-  currentDriver = d;
+  currentDriver = d.username;
   console.log(currentDriver);
   document.getElementById("driver_name").textContent = d.name;
   document.getElementById("driver_phone").textContent = d.number;
