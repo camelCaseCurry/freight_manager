@@ -4,7 +4,7 @@ import path from "path";
 import { fileURLToPath } from 'url';
 
 import {parseLighthouse} from "./src/parsers.js"
-import pdf from "pdf-parse";
+import {PDFParse} from "pdf-parse";
 import fs from "fs";
 import cors from "cors";
 
@@ -56,6 +56,9 @@ function saveUserScans(userId, scans) {
 
  app.post("/ocr", upload.single("file"), async (req, res) => {
   try {
+
+  
+
     const { userId } = req.body;
     if (!userId) return res.status(400).send("No userId provided");
     if (!req.file) return res.status(400).send("No file uploaded");
@@ -66,8 +69,9 @@ function saveUserScans(userId, scans) {
     const fileBuffer = fs.readFileSync(req.file.path);
 
     // ✅ Parse PDF → text
-    const data = await pdf(fileBuffer);
-    const text = data.text;
+    const parser = new PDFParse({ url: pdfUrl });
+    const text = await parser.getText();
+    await parser.destroy();
 
     console.log("Extracted text:", text);
 
