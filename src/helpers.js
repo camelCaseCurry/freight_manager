@@ -60,8 +60,8 @@ function toEntries(data) {
   return entries;
 }
 
-export function scanOrganizer(data){
-  const entries = toEntries(data)
+export function scanOrganizer(entries){
+
   let pickups = [];
   let deliveries = [];
   let res = {};

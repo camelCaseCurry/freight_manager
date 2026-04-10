@@ -57,35 +57,26 @@ function saveUserScans(userId, scans) {
 
  app.post("/ocr", upload.single("file"), async (req, res) => {
   try {
-
-
     const { userId } = req.body;
     if (!userId) return res.status(400).send("No userId provided");
     if (!req.file) return res.status(400).send("No file uploaded");
-
     const pdfUrl = `/uploads/${req.file.filename}`;
 
-    // ✅ Read file
+   
     const fileBuffer = fs.readFileSync(req.file.path);
-
-    // ✅ Parse PDF → text
     const data = await pdf(fileBuffer); 
     const text = await data.text;
     
 
     console.log("Extracted text:", text);
-
-    // ✅ Your parsing logic
     const extracted = scanOrganizer(parseLighthouse(text));
-
-    // ✅ Store the scan
     const userScans = loadUserScans(userId);
 
     const newScan = {
       id: Date.now().toString(),
       pdf: pdfUrl,
       text: text,              // ✅ FIXED
-      extracted: extracted,    // ✅ ADD THIS
+      extracted: extracted.,    // ✅ ADD THIS
       createdAt: new Date().toISOString(),
     };
 
