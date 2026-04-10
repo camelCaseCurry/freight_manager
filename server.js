@@ -71,7 +71,7 @@ function saveUserScans(userId, scans) {
     // ✅ Parse PDF → text
     const data = await pdf(fileBuffer); 
     const text = await data.text;
-    await parser.destroy();
+    
 
     console.log("Extracted text:", text);
 
