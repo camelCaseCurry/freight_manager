@@ -201,7 +201,7 @@ function extractDataFromText(text,idRegex,dateTimeRegex,addressRegex, deliveryRe
     return extractedData;
 }
 
-function parseLighthouse(text){
+export function parseLighthouse(text){
     const shipRegex = new RegExp("(?<=Shipment ID)\\s+\\d{5}-\\d{6}", "gi");
     
     const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
