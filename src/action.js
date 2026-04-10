@@ -51,11 +51,12 @@ function populateDriverInfo(driver){
   document.getElementById("driver_pay_percent").textContent = d.pay_percentage;
 }
 
-function populateFromScan(scan){
+function populateFromScan(meta){
 
-  Object.entries(scan).forEach(([key, value]) => {
+
+  Object.entries(meta).forEach(([key, value]) => {
     const item = document.getElementById(key);
-    if(item && key!= "delivery"){ 
+    if(item){ 
       item.textContent = value;
       if ( key === "total_weight" ){
         // sometimes reads lbs as 3 additional digits. 
@@ -297,9 +298,9 @@ async function selectScan (){
   pdfLink.href = scan.pdf;
 
   scanBlock.style = "display: block;";
-  populateFromScan(scan.formatted);
-  addAllPickupsHtml(scan.formatted["pickups"]);
-  addAllDeliveriesHtml(scan.formatted["deliveries"]);
+  populateFromScan(scan.extracted["meta"]);
+  addAllPickupsHtml(scan.extracted["pickups"]);
+  addAllDeliveriesHtml(scan.extracted["deliveries"]);
 
 }
 
