@@ -36,7 +36,7 @@ addDriver("b","Guy 2","123 456 8790",30);
 
 const API_URL = window.location.hostname === "localhost" 
   ? "http://localhost:10000" 
-  : "https://freight-manager.onrender.com/";
+  : "https://freight-manager.onrender.com";
 
 function addDriver(username,name, number,pay_percentage){
   driverInfo.push({username,name,number,pay_percentage});
