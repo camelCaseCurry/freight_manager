@@ -243,7 +243,7 @@ async function updateDriverSelection(){
   loadingText.textContent = "Processing...";
   loadingText.display = 'block';
 
-  const res = await fetch("http://localhost:8000/ocr", {
+  const res = await fetch("http://localhost:10000/ocr", {
     method: "POST",
     body: formData,
   });
@@ -260,7 +260,7 @@ async function updateDriverSelection(){
 
 // Load previous scans on page load
 async function loadScans() {
-  const res = await fetch(`http://localhost:8000/scans?userId=${currentDriver}`);
+  const res = await fetch(`http://localhost:10000/scans?userId=${currentDriver}`);
   const scans = await res.json();
 
   scanDropdown.innerHTML = `<option value="">-- Select a scan --</option>`;
@@ -284,7 +284,7 @@ async function selectScan (){
   scanBlock.display = 'none';
   return;}
 
-  const res = await fetch(`http://localhost:8000/scans?userId=${currentDriver}`);
+  const res = await fetch(`http://localhost:10000/scans?userId=${currentDriver}`);
   const scans = await res.json();
   const scan = scans.find(s => s.id === scanId);
   if (!scan) return;
