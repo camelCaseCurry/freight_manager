@@ -34,6 +34,9 @@ export let logoutBtn;
 addDriver("a","Guy 1","123 456 8790",20);
 addDriver("b","Guy 2","123 456 8790",30);
 
+const API_URL = window.location.hostname === "localhost" 
+  ? "http://localhost:10000" 
+  : "https://freight-manager.onrender.com/";
 
 function addDriver(username,name, number,pay_percentage){
   driverInfo.push({username,name,number,pay_percentage});
@@ -243,7 +246,7 @@ async function updateDriverSelection(){
   loadingText.textContent = "Processing...";
   loadingText.display = 'block';
 
-  const res = await fetch("http://localhost:10000/ocr", {
+  const res = await fetch("{API_URL}/ocr", {
     method: "POST",
     body: formData,
   });
@@ -260,7 +263,7 @@ async function updateDriverSelection(){
 
 // Load previous scans on page load
 async function loadScans() {
-  const res = await fetch(`http://localhost:10000/scans?userId=${currentDriver}`);
+  const res = await fetch(`{API_URL}/scans?userId=${currentDriver}`);
   const scans = await res.json();
 
   scanDropdown.innerHTML = `<option value="">-- Select a scan --</option>`;
@@ -284,7 +287,7 @@ async function selectScan (){
   scanBlock.display = 'none';
   return;}
 
-  const res = await fetch(`http://localhost:10000/scans?userId=${currentDriver}`);
+  const res = await fetch(`{API_URL}/scans?userId=${currentDriver}`);
   const scans = await res.json();
   const scan = scans.find(s => s.id === scanId);
   if (!scan) return;
