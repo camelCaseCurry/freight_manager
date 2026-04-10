@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 
 import {parseLighthouse} from "./src/parsers.js"
 import 'pdf-parse/worker';
-import {PDFParse} from "pdf-parse";
+import pdf from "pdf-parse";
 import fs from "fs";
 import cors from "cors";
 
@@ -69,8 +69,8 @@ function saveUserScans(userId, scans) {
     const fileBuffer = fs.readFileSync(req.file.path);
 
     // ✅ Parse PDF → text
-    const parser = new PDFParse(fileBuffer);
-    const text = await parser.getText();
+    const data = await pdf(dataBuffer); 
+    const text = await data.text;
     await parser.destroy();
 
     console.log("Extracted text:", text);
