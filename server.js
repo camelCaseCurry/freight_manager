@@ -107,5 +107,5 @@ app.get("/scans", (req, res) => {
   res.json(scans);
 });
 
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
