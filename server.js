@@ -58,7 +58,6 @@ function saveUserScans(userId, scans) {
  app.post("/ocr", upload.single("file"), async (req, res) => {
   try {
 
-  
 
     const { userId } = req.body;
     if (!userId) return res.status(400).send("No userId provided");
@@ -70,7 +69,7 @@ function saveUserScans(userId, scans) {
     const fileBuffer = fs.readFileSync(req.file.path);
 
     // ✅ Parse PDF → text
-    const parser = new PDFParse({ url: pdfUrl });
+    const parser = new PDFParse(fileBuffer);
     const text = await parser.getText();
     await parser.destroy();
 
