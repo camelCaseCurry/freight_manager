@@ -229,6 +229,7 @@ async function loadDrivers () {
 async function updateDriverSelection(){
   
   currentDriver = driverDropdown.value;
+  console.log(currentDriver);
   populateDriverInfo(currentDriver);
   scanningArea.style = "display: block;";
   loadScans();
@@ -263,6 +264,7 @@ async function updateDriverSelection(){
 
 // Load previous scans on page load
 async function loadScans() {
+  console.log(`${API_URL}/scans?userId=${currentDriver}`);
   const res = await fetch(`${API_URL}/scans?userId=${currentDriver}`);
   const scans = await res.json();
 
