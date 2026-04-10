@@ -36,9 +36,10 @@ export function scanOrganizer(data){
     );}
 
   // other fields
+  
   meta.push( {
-      id: data.id|| null,
-      totalPayment: data.totalPayment|| null
+      shipment_id: data.id|| null,
+      total_payment: data.totalPayment|| null
     }
   );
 
