@@ -69,7 +69,7 @@ function saveUserScans(userId, scans) {
     const fileBuffer = fs.readFileSync(req.file.path);
 
     // ✅ Parse PDF → text
-    const data = await pdf(dataBuffer); 
+    const data = await pdf(fileBuffer); 
     const text = await data.text;
     await parser.destroy();
 
