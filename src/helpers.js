@@ -10,83 +10,46 @@ export function getLogins() {
   return raw ? JSON.parse(raw) : [];
 }
 
-function addEntryToDict(entry,dict){
-  dict[entry.type] =  entry.mentionText;
-}
 
 
-function propertiesToDict(properties){
-  let dict = {};
-  for (const entry of properties){
-    addEntryToDict(entry,dict);
-  }
-  return dict;
-}
+export function scanOrganizer(data){
 
-function toEntries(data) {
-  const entries = [];
+  let pickups = [];
+  let deliveries = [];
+  let meta = [];
+  let res = {};
 
   // deliveries
   for (let i = 0; i < data.deliveryAddresses.length; i++) {
-    entries.push({
-      type: "delivery",
-      properties: {
+    deliveries.push({
         address: data.deliveryAddresses[i],
         date: data.deliveryDates[i] || null
       }
-    });
+    );
   }
 
   // pickups
   for (let i = 0; i < data.loadAddresses.length; i++) {
-    entries.push({
-      type: "pickup",
-      properties: {
+    pickups.push({
         address: data.loadAddresses[i],
         date: data.loadDates[i] || null
       }
-    });
+    );
   }
 
   // other fields
-  entries.push({
-    type: "meta",
-    properties: {
-      id: data.id,
-      totalPayment: data.totalPayment
+  meta.push( {
+      id: data.id|| null,
+      totalPayment: data.totalPayment|| null
     }
-  });
-
-  return entries;
-}
-
-export function scanOrganizer(entries){
-
-  let pickups = [];
-  let deliveries = [];
-  let res = {};
-
-  for (const entry of entries){
-    switch (entry.type){
-
-      case "delivery":
-        deliveries.push(propertiesToDict(entry.properties));
-        break;
-
-      case "pickup":
-        pickups.push(propertiesToDict(entry.properties));
-        break;
-
-      default:
-        addEntryToDict(entry,res);
-        };
-    }
+  );
 
   res["deliveries"]=deliveries;
   res["pickups"]=pickups;
+  res["meta"] = meta;
 
   return res;
-  }
+}
 
   function createGoogleMapsRequest(address){
   let req_str = "https://www.google.com/maps/dir/?api=1&destination=";
