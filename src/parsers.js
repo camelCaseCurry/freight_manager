@@ -101,7 +101,7 @@ function extractDataFromText(text,idRegex,dateTimeRegex,addressRegex, deliveryRe
 
     // numerics '
     const shipment_id = extractFirstGeneric(text,idRegex);
-    const totalPayment = extractDollars(text,totalRegex,buffers[0]);
+    const total_payment = extractDollars(text,totalRegex,buffers[0]);
 
 
     //strings
