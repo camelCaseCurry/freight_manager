@@ -1,6 +1,5 @@
 import { getLogins,isAdmin } from "./helpers.js"; 
 
-import { PDFParse } from 'pdf-parse';
 
 // ======= Module state (exportable) =======
 export let drivers = ["mary","sam"];
