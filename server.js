@@ -69,14 +69,16 @@ function saveUserScans(userId, scans) {
     
 
     console.log("Extracted text:", text);
-    const extracted = scanOrganizer(parseLighthouse(text));
+    const parsed = parseLighthouse(text);
+    const extracted = scanOrganizer(parsed);
     const userScans = loadUserScans(userId);
 
     const newScan = {
       id: Date.now().toString(),
       pdf: pdfUrl,
-      text: text,              // ✅ FIXED
-      extracted: extracted,    // ✅ ADD THIS
+      text,     
+      parsed,        
+      extracted,
       createdAt: new Date().toISOString(),
     };
 
