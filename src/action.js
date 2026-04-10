@@ -5,7 +5,7 @@ import { getLogins,isAdmin } from "./helpers.js";
 export let drivers = ["mary","sam"];
 export let assignedScans = {};
 export let driverInfo = [];
-export let currentDriver = null;
+export let currentDriver = "admin";
 export let currentUser = sessionStorage.getItem("currentUser");
 
 // ======= DOM references (top-level, unassigned) =======
