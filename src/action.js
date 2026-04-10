@@ -246,7 +246,7 @@ async function updateDriverSelection(){
   loadingText.textContent = "Processing...";
   loadingText.display = 'block';
 
-  const res = await fetch("{API_URL}/ocr", {
+  const res = await fetch(`${API_URL}/ocr`, {
     method: "POST",
     body: formData,
   });
@@ -263,7 +263,7 @@ async function updateDriverSelection(){
 
 // Load previous scans on page load
 async function loadScans() {
-  const res = await fetch(`{API_URL}/scans?userId=${currentDriver}`);
+  const res = await fetch(`${API_URL}/scans?userId=${currentDriver}`);
   const scans = await res.json();
 
   scanDropdown.innerHTML = `<option value="">-- Select a scan --</option>`;
@@ -287,7 +287,7 @@ async function selectScan (){
   scanBlock.display = 'none';
   return;}
 
-  const res = await fetch(`{API_URL}/scans?userId=${currentDriver}`);
+  const res = await fetch(`${API_URL}/scans?userId=${currentDriver}`);
   const scans = await res.json();
   const scan = scans.find(s => s.id === scanId);
   if (!scan) return;
