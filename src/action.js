@@ -45,6 +45,7 @@ function addDriver(username,name, number,pay_percentage){
 function populateDriverInfo(driver){
   const d = driverInfo.find(e => e.username === driver);
   currentDriver = d;
+  console.log(currentDriver);
   document.getElementById("driver_name").textContent = d.name;
   document.getElementById("driver_phone").textContent = d.number;
   document.getElementById("driver_pay_percent").textContent = d.pay_percentage;
@@ -264,7 +265,7 @@ async function updateDriverSelection(){
 
 // Load previous scans on page load
 async function loadScans() {
-  console.log(`${API_URL}/scans?userId=${currentDriver}`);
+  console.log(currentDriver);
   const res = await fetch(`${API_URL}/scans?userId=${currentDriver}`);
   const scans = await res.json();
 
