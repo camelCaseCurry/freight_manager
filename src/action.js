@@ -158,7 +158,7 @@ function addNavHtml(elem,box,index,type){
 
   const emojis = {"Delivery": "📦", "Pickup":"🚚", "Fuel":"⛽"}
   const section = document.createElement("section");
-  const nav_string = createGoogleMapsRequest(elem.locations);
+  const nav_string = createGoogleMapsRequest(elem.address);
   section.innerHTML = `
   <h2>${type} #${index}</h2>
   <p>${elem.address}</p>
