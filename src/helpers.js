@@ -25,8 +25,7 @@ export function scanOrganizer(data){
         address: data.deliveryAddresses[i],
         date: data.deliveryDates[i] || null
       }
-    );
-  }
+    );}
 
   // pickups
   for (let i = 0; i < data.loadAddresses.length; i++) {
@@ -34,8 +33,7 @@ export function scanOrganizer(data){
         address: data.loadAddresses[i],
         date: data.loadDates[i] || null
       }
-    );
-  }
+    );}
 
   // other fields
   meta.push( {

@@ -76,7 +76,7 @@ function saveUserScans(userId, scans) {
       id: Date.now().toString(),
       pdf: pdfUrl,
       text: text,              // ✅ FIXED
-      extracted: extracted.,    // ✅ ADD THIS
+      extracted: extracted,    // ✅ ADD THIS
       createdAt: new Date().toISOString(),
     };
 
