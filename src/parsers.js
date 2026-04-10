@@ -112,7 +112,7 @@ function extractDataFromText(text,idRegex,dateTimeRegex,addressRegex, deliveryRe
     const loadAddresses = extractAddresses(text, loadingRegex,addressRegex,buffers[5]);
 
     const extractedData = {
-      shpiment_id,
+      shipment_id,
       total_payment,
       deliveryAddresses,
       deliveryDates,
