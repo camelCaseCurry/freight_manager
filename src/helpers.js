@@ -38,8 +38,8 @@ export function scanOrganizer(data){
   // other fields
   
   meta.push( {
-      shipment_id: data.id|| null,
-      total_payment: data.totalPayment|| null
+      shipment_id: data.shipment_id|| null,
+      total_payment: data.total_payment|| null
     }
   );
 
