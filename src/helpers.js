@@ -23,8 +23,45 @@ function propertiesToDict(properties){
   return dict;
 }
 
+function toEntries(data) {
+  const entries = [];
 
-export function scanOrganizer(entries){
+  // deliveries
+  for (let i = 0; i < data.deliveryAddresses.length; i++) {
+    entries.push({
+      type: "delivery",
+      properties: {
+        address: data.deliveryAddresses[i],
+        date: data.deliveryDates[i] || null
+      }
+    });
+  }
+
+  // pickups
+  for (let i = 0; i < data.loadAddresses.length; i++) {
+    entries.push({
+      type: "pickup",
+      properties: {
+        address: data.loadAddresses[i],
+        date: data.loadDates[i] || null
+      }
+    });
+  }
+
+  // other fields
+  entries.push({
+    type: "meta",
+    properties: {
+      id: data.id,
+      totalPayment: data.totalPayment
+    }
+  });
+
+  return entries;
+}
+
+export function scanOrganizer(data){
+  const entries = toEntries(data)
   let pickups = [];
   let deliveries = [];
   let res = {};
