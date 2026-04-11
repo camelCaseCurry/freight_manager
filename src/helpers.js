@@ -22,6 +22,7 @@ export function scanOrganizer(data){
   // deliveries
   for (let i = 0; i < data.deliveryAddresses.length; i++) {
     deliveries.push({
+        name: data.deliveryNames[i],
         address: data.deliveryAddresses[i],
         date: data.deliveryDates[i] || null
       }
@@ -30,6 +31,7 @@ export function scanOrganizer(data){
   // pickups
   for (let i = 0; i < data.loadAddresses.length; i++) {
     pickups.push({
+        name: data.loadNames[i],
         address: data.loadAddresses[i],
         date: data.loadDates[i] || null
       }

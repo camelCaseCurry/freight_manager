@@ -161,6 +161,7 @@ function addNavHtml(elem,box,index,type){
   const nav_string = createGoogleMapsRequest(elem.address);
   section.innerHTML = `
   <h2>${type} #${index}</h2>
+  <p><strong>${elem.name}</strong></p>
   <p>${elem.address}</p>
   <p><strong>Date / Time:</strong> ${elem.date}</p>
   <p><strong>Special Instructions: </strong> ${"NULL"}</p>

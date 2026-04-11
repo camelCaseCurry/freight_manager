@@ -8,50 +8,42 @@
 //  total payment, 
 //  and other fields
 
-
-function extractAddresses(text,keywordRegex,addressRegex,buffer){
-    let results = []
+function extractAddresses(text, keywordRegex, addressRegex, buffer) {
+    let results = [];
     const allMatches = text.matchAll(addressRegex);
 
-    allMatches.forEach(match => {
-         const prefix = text.slice(Math.max(0, match.index - buffer), match.index);
-        // Reset lastIndex for consistent testing
+    for (const match of allMatches) {
+        const prefix = text.slice(Math.max(0, match.index - buffer), match.index);
         keywordRegex.lastIndex = 0;
-        if (keywordRegex.test(prefix)){
-            results.push(match[0].replace(/\n/g, ' '));
         
+        if (keywordRegex.test(prefix)) {
+            // match[1] is the captured part. match[0] is the whole thing.
+            const data = match[1] ? match[1] : match[0];
+            results.push(data.replace(/\n/g, ' ').trim());
         }
-    });
-    
-return results;
+    }
+    return results;
 }
 
-
-
-
-// pull dates that have the target keyword infront of them
-function extractDates(text,dateTimeRegex,keywordRegex,buffer){
+// Do the same for extractDates (used for names)
+function extractDates(text, dateTimeRegex, keywordRegex, buffer) {
     const results = []; 
     const matches = text.matchAll(dateTimeRegex);
      
-    matches.forEach( match => {
+    for (const match of matches) {
         const prefix = text.slice(Math.max(0, match.index - buffer), match.index);
-        // Reset lastIndex for consistent testing
-        
         keywordRegex.lastIndex = 0;
-        if (keywordRegex.test(prefix)){
-        const cleanStr = match[0]
-                .replace(/[-\t]/g, "") 
-                .replace(/\s+/g, " ")
-                .trim();
-
-        
-        results.push(cleanStr);
+        if (keywordRegex.test(prefix)) {
+            // Grab match[1] to skip the label
+            const raw = match[1] ? match[1] : match[0];
+            const cleanStr = raw.replace(/[-\t]/g, "").replace(/\s+/g, " ").trim();
+            results.push(cleanStr);
         }
-    }); 
-
+    } 
     return results;
 }
+
+
 
 // pull a cash amount 
 function extractDollars(text,keywordRegex,buffer) {
@@ -94,15 +86,33 @@ function extractAllGeneric(text, selectionRegex) {
  
     return results;
 }
+function extractNames(text, nameRegex, typeRegex) {
+    const results = [];
+    const matches = text.matchAll(nameRegex);
+    
+    for (const match of matches) {
+        // match[0] is the whole string (e.g. "PICKUP: RLS Distribution")
+        // Check if this specific match contains our target type (PICKUP or DELIVERY)
+        typeRegex.lastIndex = 0;
+        if (typeRegex.test(match[0])) {
+            // If the regex has a capture group (index 1), use it to get JUST the name
+            results.push(match[1] ? match[1].trim() : match[0].trim());
+        }
+    }
+    return results;
+}
 
-function extractDataFromText(text,idRegex,dateTimeRegex,addressRegex, deliveryRegex,loadingRegex,totalRegex,milesRegex,buffers){
+function extractDataFromText(text,idRegex,dateTimeRegex,nameRegex,addressRegex, deliveryRegex,loadingRegex,totalRegex,milesRegex,buffers){
 
     // numerics '
     const shipment_id = extractFirstGeneric(text,idRegex);
     const total_payment = extractDollars(text,totalRegex,buffers[0]);
-
-
+    
+    
     //strings
+    const deliveryNames  = extractDates(text,nameRegex, deliveryRegex,buffers[4]);
+    const loadNames  = extractDates(text,nameRegex,loadingRegex,buffers[5]);
+    
     const deliveryDates = extractDates(text,dateTimeRegex,deliveryRegex,buffers[2]);
     const loadDates = extractDates(text,dateTimeRegex,loadingRegex,buffers[3]);
     
@@ -110,10 +120,13 @@ function extractDataFromText(text,idRegex,dateTimeRegex,addressRegex, deliveryRe
     const loadAddresses = extractAddresses(text, loadingRegex,addressRegex,buffers[5]);
 
     const extractedData = {
+      
       shipment_id,
       total_payment,
+      deliveryNames,
       deliveryAddresses,
       deliveryDates,
+      loadNames,
       loadAddresses,
       loadDates
     };
@@ -123,7 +136,8 @@ function extractDataFromText(text,idRegex,dateTimeRegex,addressRegex, deliveryRe
 
 export function parseLighthouse(text){
     const shipRegex = new RegExp("(?<=Shipment ID)\\s+\\d{5}-\\d{6}", "gi");
-    
+      // Capture the name immediately following the label
+
     const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
     const addressKeywords = ["Apt", "FCFS"];
     
@@ -148,41 +162,38 @@ export function parseLighthouse(text){
         /\b(?:total\s+(?:cost|due|payment\s+due|amount|price|charge)|total\b(?=\s*(?!miles|weight|distance|lb|kg)))/gi;
     const milesRegex =
         /(total miles|miles|distance)/gi;
-    const addressRegex = new RegExp(`(?<=${addressKeywords.join("|")})\\s+[\\s\\S]+?\\d{5}`, "gi");
-    const a=1;
+        
+    const nameRegex = /(?:FCFS|Apt)\s*\n\s*([^\n\d]+)/gi;
 
-    return extractDataFromText(text,shipRegex,dateTimeRegex,addressRegex, deliveryRegex,loadingRegex,totalRegex,milesRegex,[25,25,40,40,40,40]);
+    // 2. Address Regex: Looks for the first line starting with a number AFTER FCFS/Apt
+    const addressRegex = /(?:FCFS|Apt)[\s\S]+?(\d+[\s\S]+?\d{5})/gi;
+   
+
+
+    return extractDataFromText(text,shipRegex,dateTimeRegex,nameRegex,addressRegex, deliveryRegex,loadingRegex,totalRegex,milesRegex,[25,25,40,40,40,40]);
     
 }
 
 
 export function parseRLS(text){
-    // 1. Manifest: Fixed lookbehind to handle potential spaces/newlines 
-    // and match the 7-digit number specifically.
     const shipRegex = /Manifest\s*#\s*(\d{7})/gi;
     
-    // 2. Date/Time: Your new regex works great.
-    const dateTimePattern = `(\\d{1,2}/\\d{1,2}/\\d{2,4})\\s+(\\d{1,2}:\\d{2}[APM]{2})\\s*-\\s*(\\d{1,2}:\\d{2}[APM]{2})`;
+    const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    const addressKeywords = ["ORDER"];
+
+    const dateTimePattern = `(\\d{1,2}\/\\d{1,2}\/\\d{2,4})\\s+(\\d{1,2}:\\d{2}[APM]{2})\\s*-\\s*(\\d{1,2}:\\d{2}[APM]{2})`;
     const dateTimeRegex = new RegExp(dateTimePattern, "gi");
 
-    // 3. Delivery: Added a fix for the "DELIVVERY" typo found in your source text
-    // and included standard "DELIVERY".
-    const deliveryRegex = /(?:DELIVERY|DELIVVERY)[\s-:]/gi;
+    const deliveryRegex = /DELIVERY:.*$/gim;
+const loadingRegex  = /PICKUP:.*$/gim;
+    const totalRegex =
+        /\b(?:total\s+(?:cost|due|payment\s+due|amount|price|charge)|total\b(?=\s*(?!miles|weight|distance|lb|kg)))/gi;
+    const milesRegex =
+        /(total miles|miles|distance)/gi;
     
-    // 4. Pickup: Standard pickup look
-    const loadingRegex = /PICKUP:/gi;
-
-    // 5. Total Payment: Matches "Total: $2844.10" 
-    // The negative lookahead (?! miles|weight) prevents matching totals for lbs.
-    const totalRegex = /Total:\s*\$?\s*(\d+(?:\.\d{2})?)(?!\s*(?:lbs|plts|miles))/gi;
-
-    // 6. Miles: RLS doesn't always show miles, but this keeps your logic
-    const milesRegex = /(total miles|miles|distance)\s*:?\s*(\d+)/gi;
-
-    // 7. Address: Looks for the text between the Keyword/Time and the Zip Code.
-    // Address keywords updated to handle RLS structure better.
-    const addressKeywords = ["Newfield, NJ", "Tampa, FL", "Plant City, FL"];
-    const addressRegex = /\d+[\s\w\.]+(?:[A-Z]{2})\s+\d{5}/gi;
-    return extractDataFromText(text,shipRegex,dateTimeRegex,addressRegex, deliveryRegex,loadingRegex,totalRegex,milesRegex,[25,25,40,40,40,40]);
+   const nameRegex = /(?<=(?:PICKUP|DELIVERY):\s+)[^\n\r]+/gi;
+    const addressRegex = /\d+\s+[A-Z\d\s,.]+?\s+[A-Z]{2}\s+\d{5}/gi;
+    
+    return extractDataFromText(text,shipRegex,dateTimeRegex,nameRegex,addressRegex, deliveryRegex,loadingRegex,totalRegex,milesRegex,[25,25,40,40,150,150]);
     
 }
