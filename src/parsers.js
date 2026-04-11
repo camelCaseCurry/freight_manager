@@ -183,7 +183,7 @@ export function parseRLS(text){
     const milesRegex =
         /(total miles|miles|distance)/gi;
     const addressRegex = new RegExp(`(?=${addressKeywords.join("|")})\\s+[\\s\\S]+?\\d{5}`, "gi");
-    const a=1;
+  
 
     return extractDataFromText(text,shipRegex,dateTimeRegex,addressRegex, deliveryRegex,loadingRegex,totalRegex,milesRegex,[25,25,40,40,40,40]);
     

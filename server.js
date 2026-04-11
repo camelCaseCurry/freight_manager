@@ -69,7 +69,7 @@ function saveUserScans(userId, scans) {
     
 
     console.log("Extracted text:", text);
-    const parsed = parseLighthouse(text);
+    const parsed = parseRLS(text);
     const extracted = scanOrganizer(parsed);
     const userScans = loadUserScans(userId);
 
