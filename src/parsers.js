@@ -28,9 +28,7 @@ return results;
 
 
 
-function toYYYYMMDD(date) {
-  return date.toISOString().slice(0, 19);
-}
+
 // pull dates that have the target keyword infront of them
 function extractDates(text,dateTimeRegex,keywordRegex,buffer){
     const results = []; 
@@ -47,7 +45,7 @@ function extractDates(text,dateTimeRegex,keywordRegex,buffer){
                 .replace(/\s+/g, " ")
                 .trim();
 
-        const date = toYYYYMMDD(new Date(cleanStr));
+        
         results.push(date);
         }
     }); 
