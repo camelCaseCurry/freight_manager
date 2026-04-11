@@ -164,16 +164,7 @@ export function parseRLS(text){
     const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
     const addressKeywords = ["ORDER"];
     
-    const dateTimePattern = `(\d{1,2}\/\d{1,2}\/\d{2,4})\s+(\d{1,2}:\d{2}[APM]{2})\s*-\s*(\d{1,2}:\d{2}[APM]{2})`;
-    
-    // 2. STRICT BRIDGE: Match everything UNLESS it's the start of a new date
-    // This prevents the match from spanning across multiple date entries.
-    const bridge = `(?:(?!${monthNames.join('|')})[\\s\\S])+?`;
-    
-    // 3. Time Part stays the same
-    const timePart = `\\d{1,2}:\\d{2}`;
-    
-    
+    const dateTimePattern = `(\\d{1,2}\/\\d{1,2}\/\\d{2,4})\\s+(\\d{1,2}:\\d{2}[APM]{2})\\s*-\\s*(\\d{1,2}:\\d{2}[APM]{2})`;
     const dateTimeRegex = new RegExp(dateTimePattern, "gi");
 
     const deliveryRegex =  /Delivery[\s-]/gi;
@@ -183,7 +174,6 @@ export function parseRLS(text){
     const milesRegex =
         /(total miles|miles|distance)/gi;
     const addressRegex = new RegExp(`(?=${addressKeywords.join("|")})\\s+[\\s\\S]+?\\d{5}`, "gi");
-  
 
     return extractDataFromText(text,shipRegex,dateTimeRegex,addressRegex, deliveryRegex,loadingRegex,totalRegex,milesRegex,[25,25,40,40,40,40]);
     
