@@ -157,22 +157,32 @@ export function parseLighthouse(text){
 
 
 export function parseRLS(text){
-    const shipRegex = new RegExp("(?<= Manifest # )\\s+\\d{7}", "gi");
+    // 1. Manifest: Fixed lookbehind to handle potential spaces/newlines 
+    // and match the 7-digit number specifically.
+    const shipRegex = /Manifest\s*#\s*(\d{7})/gi;
     
-    const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-    const addressKeywords = ["ORDER"];
-    
-    const dateTimePattern = `(\\d{1,2}\/\\d{1,2}\/\\d{2,4})\\s+(\\d{1,2}:\\d{2}[APM]{2})\\s*-\\s*(\\d{1,2}:\\d{2}[APM]{2})`;
+    // 2. Date/Time: Your new regex works great.
+    const dateTimePattern = `(\\d{1,2}/\\d{1,2}/\\d{2,4})\\s+(\\d{1,2}:\\d{2}[APM]{2})\\s*-\\s*(\\d{1,2}:\\d{2}[APM]{2})`;
     const dateTimeRegex = new RegExp(dateTimePattern, "gi");
 
-    const deliveryRegex =  /Delivery[\s-]/gi;
-    const loadingRegex =  /(Pickup)/gi;
-    const totalRegex =
-        /\b(?:total\s+(?:cost|due|payment\s+due|amount|price|charge)|total\b(?=\s*(?!miles|weight|distance|lb|kg)))/gi;
-    const milesRegex =
-        /(total miles|miles|distance)/gi;
-    const addressRegex = new RegExp(`(?=${addressKeywords.join("|")})\\s+[\\s\\S]+?\\d{5}`, "gi");
+    // 3. Delivery: Added a fix for the "DELIVVERY" typo found in your source text
+    // and included standard "DELIVERY".
+    const deliveryRegex = /(?:DELIVERY|DELIVVERY)[\s-:]/gi;
+    
+    // 4. Pickup: Standard pickup look
+    const loadingRegex = /PICKUP:/gi;
 
+    // 5. Total Payment: Matches "Total: $2844.10" 
+    // The negative lookahead (?! miles|weight) prevents matching totals for lbs.
+    const totalRegex = /Total:\s*\$?\s*(\d+(?:\.\d{2})?)(?!\s*(?:lbs|plts|miles))/gi;
+
+    // 6. Miles: RLS doesn't always show miles, but this keeps your logic
+    const milesRegex = /(total miles|miles|distance)\s*:?\s*(\d+)/gi;
+
+    // 7. Address: Looks for the text between the Keyword/Time and the Zip Code.
+    // Address keywords updated to handle RLS structure better.
+    const addressKeywords = ["Newfield, NJ", "Tampa, FL", "Plant City, FL"];
+    const addressRegex = /\d+[\s\w\.]+(?:[A-Z]{2})\s+\d{5}/gi;
     return extractDataFromText(text,shipRegex,dateTimeRegex,addressRegex, deliveryRegex,loadingRegex,totalRegex,milesRegex,[25,25,40,40,40,40]);
     
 }
