@@ -3,7 +3,7 @@ import multer from "multer";
 import path from "path";
 import { fileURLToPath } from 'url';
 
-import {parseLighthouse} from "./src/parsers.js"
+import {parseLighthouse,parseRLS} from "./src/parsers.js"
 
 import pdf from "pdf-parse";
 import fs from "fs";
