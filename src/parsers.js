@@ -46,7 +46,7 @@ function extractDates(text,dateTimeRegex,keywordRegex,buffer){
                 .trim();
 
         
-        results.push(date);
+        results.push(cleanStr);
         }
     }); 
 
